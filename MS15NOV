@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Medicine Store</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Background Gradient */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom right, #e3f2fd, #c8e6c9);
+            margin: 0;
+        }
+
+        /* Header with Banner Image */
+        header {
+            background: url('https://img.freepik.com/free-photo/medicine-capsules-global-health-with-geometric-pattern-digital-remix_53876-126742.jpg') center/cover no-repeat;
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        h2 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Search and Cart Styles */
+        .search-box, .cart-btn {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .search-box input, .search-box select {
+            padding: 10px;
+            margin-right: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .search-box button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #00796b;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .search-box button:hover {
+            background-color: #004d40;
+        }
+
+        /* Product List Styling */
+        .product-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+        }
+
+        .product-item {
+            background-color: #fff;
+            padding: 15px;
+            margin: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 200px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-item:hover {
+            transform: scale(1.05);
+        }
+
+        .product-item h3 {
+            color: #00796b;
+        }
+
+        /* Popup and Overlay Styling */
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+            width: 300px;
+            text-align: center;
+        }
+
+        .popup h3 {
+            color: #333;
+        }
+
+        .popup button {
+            background-color: #00796b;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .popup button:hover {
+            background-color: #004d40;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+
+        /* Cart Button Styling */
+        .cart-btn button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #ff9800;
+            color: #fff;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .cart-btn button:hover {
+            background-color: #e68900;
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: #00796b;
+            color: #fff;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-content h2, .footer-content h3 {
+            color: #ffeb3b;
+            margin-bottom: 10px;
+        }
+
+        .footer-content p {
+            margin: 5px 0;
+        }
+
+        .footer-content .social-links a {
+            color: #ffeb3b;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .footer-content .social-links a:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Welcome to Online Medicine Store</h1>
+</header>
+
+<div class="container">
+    <h2>Find Your Medicines</h2>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Search for medicines...">
+        <select id="categorySelect">
+            <option value="all">All Categories</option>
+            <option value="pain reliever">Pain Reliever</option>
+            <option value="cough">Cough Medicine</option>
+            <option value="antibiotic">Antibiotics</option>
+        </select>
+        <button onclick="searchProduct()">Search</button>
+    </div>
+
+    <div class="cart-btn">
+        <button onclick="viewCart()">View Cart (<span id="cartCount">0</span>)</button>
+    </div>
+
+    <div class="product-list" id="productList">
+        <!-- Product items will be added here by JavaScript -->
+    </div>
+</div>
+
+<!-- Product Details Popup -->
+<div class="popup" id="productPopup">
+    <h3 id="popupTitle"></h3>
+    <p id="popupDescription"></p>
+    <button onclick="addToCart()">Add to Cart</button>
+    <button onclick="closePopup()">Close</button>
+</div>
+
+<div class="overlay" id="overlay" onclick="closePopup()"></div>
+
+<!-- Footer Section -->
+<footer>
+    <div class="footer-content">
+        <h2>About Us</h2>
+        <p>Welcome to our online medicine store, where health and convenience come together! We offer a wide range of quality medications, health products, and essentials to meet your daily healthcare needs. Our goal is to provide a reliable, accessible, and easy-to-use service for everyone.</p>
+        
+        <h3>Contact Us</h3>
+        <p>Email: support@onlinemedicinestore.com</p>
+        <p>Phone: +91 1234567890</p>
+        
+        <h3>Follow Us</h3>
+        <div class="social-links">
+            <a href="#">Facebook</a> |
+            <a href="#">Twitter</a> |
+            <a href="https://www.instagram.com/i_hp_i/profilecard/?igsh=ajBoeXhkNzhtamwx" target="_blank">Instagram</a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Product data
+    const products = [
+        { name: "Paracetamol", category: "pain reliever", description: "500mg - Pain reliever and fever reducer" },
+        { name: "Aspirin", category: "pain reliever", description: "100mg - Reduces pain, fever, and inflammation" },
+        { name: "Ibuprofen", category: "pain reliever", description: "200mg - Anti-inflammatory and pain relief" },
+        { name: "Cough Syrup", category: "cough", description: "Soothes throat and relieves cough" },
+        { name: "Amoxicillin", category: "antibiotic", description: "500mg - Broad-spectrum antibiotic" }
+    ];
+    let cart = [];
+    
+    function renderProducts() {
+        const productList = document.getElementById("productList");
+        productList.innerHTML = "";
+        products.forEach((product, index) => {
+            const productItem = document.createElement("div");
+            productItem.classList.add("product-item");
+            productItem.innerHTML = `<h3>${product.name}</h3><p>${product.description}</p>`;
+            productItem.setAttribute("data-index", index);
+            productItem.addEventListener("click", () => openPopup(index));
+            productList.appendChild(productItem);
+        });
+    }
+    
+    function searchProduct() {
+        const input = document.getElementById("searchInput").value.toLowerCase();
+        const category = document.getElementById("categorySelect").value;
+        const filteredProducts = products.filter(product => {
+            const matchesCategory = category === "all" || product.category === category;
+            const matchesName = product.name.toLowerCase().includes(input);
+            return matchesCategory && matchesName;
+        });
+        document.getElementById("productList").innerHTML = "";
+        filteredProducts.forEach((product, index) => {
+            const productItem = document.createElement("div");
+            productItem.classList.add("product-item");
+            productItem.innerHTML = `<h3>${product.name}</h3><p>${product.description}</p>`;
+            productItem.setAttribute("data-index", index);
+            productItem.addEventListener("click", () => openPopup(index));
+            document.getElementById("productList").appendChild(productItem);
+        });
+    }
+    
+    function openPopup(index) {
+        const product = products[index];
+        document.getElementById("popupTitle").innerText = product.name;
+        document.getElementById("popupDescription").innerText = product.description;
+        document.getElementById("productPopup").style.display = "block";
+        document.getElementById("overlay").style.display = "block";
+        document.getElementById("productPopup").setAttribute("data-index", index);
+    }
+    
+    function closePopup() {
+        document.getElementById("productPopup").style.display = "none";
+        document.getElementById("overlay").style.display = "none";
+    }
+    
+    function addToCart() {
+        const index = document.getElementById("productPopup").getAttribute("data-index");
+        cart.push(products[index]);
+        document.getElementById("cartCount").innerText = cart.length;
+        closePopup();
+    }
+    
+    function viewCart() {
+        if (cart.length === 0) {
+            alert("Your cart is empty!");
+        } else {
+            alert("Items in your cart:\n" + cart.map(item => item.name).join(", "));
+        }
+    }
+
+    // Initial render
+    renderProducts();
+</script>
+
+</body>
+</html>
